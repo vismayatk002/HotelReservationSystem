@@ -38,8 +38,19 @@ public class HotelReservation {
         LocalDate endDate = LocalDate.parse(date2, formatter);
         //find number of days
 	    final long days = ChronoUnit.DAYS.between(startDate, endDate);
-	    System.out.println ("Days: " + days);
-		
+	    
+	    String hotelName = " ";
+	    int min = 0; 
+	    for(Hotel hotel : hotelList) {
+	    	
+	    	int totalRate = (int)days * hotel.getRegularCustRate();
+	    	if(min == 0 || totalRate < min) {
+	    		
+	    		min = totalRate;
+	    		hotelName = hotel.getName();
+	    	}
+	    }
+	    System.out.print(hotelName + " , Total Rate : " + min);
 	}
     public static void main( String[] args ){
     	
@@ -63,7 +74,7 @@ public class HotelReservation {
 				default :
 					System.out.print("\nInvalid option");
 			}
-			System.out.print("Do you want to continue? Press 1 : ");
+			System.out.print("\nDo you want to continue? Press 1 : ");
 			continueFlag = sc.nextInt();
 			
 		}while(continueFlag == 1);
