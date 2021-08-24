@@ -5,6 +5,7 @@ public class Hotel {
 	String name;
 	int regCustWeekDayRate;
 	int regCustWeekEndRate;
+	int rating;
 	
 	public Hotel(String name){
 		this.name = name;
@@ -15,6 +16,12 @@ public class Hotel {
 	}
 	public String getName() {
 		return name;
+	}
+	public void setRating(int rating) {
+		this.rating = rating;
+	}
+	public int getRating() {
+		return rating;
 	}
 	public void setRegCustWeekDayRate(int regCustWeekDayRate) {
 		this.regCustWeekDayRate = regCustWeekDayRate;;

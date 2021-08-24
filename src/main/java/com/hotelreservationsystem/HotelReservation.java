@@ -5,7 +5,6 @@ import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 public class HotelReservation {
@@ -18,6 +17,10 @@ public class HotelReservation {
 		System.out.print("Enter the name of Hotel : ");
 		String name = sc.nextLine();
 		Hotel hotel = new Hotel(name);
+		System.out.print("Enter Hotel rating : ");
+		int rating = sc.nextInt();
+		hotel.setRating(rating);
+		hotelList.add(hotel);
 		System.out.print("Enter regular customer weekday rate : ");
 		int regCustWeekDayRate = sc.nextInt();
 		hotel.setRegCustWeekDayRate(regCustWeekDayRate);
@@ -27,7 +30,7 @@ public class HotelReservation {
 		hotel.setRegCustWeekEndRate(regCustWeekEndRate);
 		hotelList.add(hotel);
 	}
-	//get list of date between startdates to enddate
+	//get list of date between start-dates to end-date
 	public ArrayList<LocalDate> getDates(LocalDate startDate, LocalDate endDate) {
 		
 		ArrayList<LocalDate> dateList = new ArrayList<>();
