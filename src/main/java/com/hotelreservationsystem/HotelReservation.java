@@ -20,7 +20,14 @@ public class HotelReservation {
 		int regularCustRate = sc.nextInt();
 		hotel.setRegularCustRate(regularCustRate);
 		hotelList.add(hotel);
-		
+		System.out.print("Enter regular customer weekday rate : ");
+		int regCustWeekDayRate = sc.nextInt();
+		hotel.setRegCustWeekDayRate(regCustWeekDayRate);
+		hotelList.add(hotel);
+		System.out.print("Enter regular customer weekend rate : ");
+		int regCustWeekEndRate = sc.nextInt();
+		hotel.setRegCustWeekEndRate(regCustWeekEndRate);
+		hotelList.add(hotel);
 	}
 	
 	public void findcheapestHotel() {

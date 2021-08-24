@@ -4,6 +4,8 @@ public class Hotel {
 
 	String name;
 	int regularCustRate;
+	int regCustWeekDayRate;
+	int regCustWeekEndRate;
 	
 	public Hotel(String name){
 		this.name = name;
@@ -20,5 +22,17 @@ public class Hotel {
 	}
 	public int getRegularCustRate() {
 		return regularCustRate;
+	}
+	public void setRegCustWeekDayRate(int regCustWeekDayRate) {
+		this.regCustWeekDayRate = regCustWeekDayRate;;
+	}
+	public int getRegCustWeekDayRate() {
+		return regCustWeekDayRate;
+	}
+	public void setRegCustWeekEndRate(int regCustWeekEndRate) {
+		this.regCustWeekEndRate = regCustWeekEndRate;
+	}
+	public int getRegCustWeekEndRate() {
+		return regCustWeekEndRate;
 	}
 }
