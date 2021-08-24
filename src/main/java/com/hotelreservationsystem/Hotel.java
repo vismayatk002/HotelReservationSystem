@@ -3,7 +3,6 @@ package com.hotelreservationsystem;
 public class Hotel {
 
 	String name;
-	int regularCustRate;
 	int regCustWeekDayRate;
 	int regCustWeekEndRate;
 	
@@ -16,12 +15,6 @@ public class Hotel {
 	}
 	public String getName() {
 		return name;
-	}
-	public void setRegularCustRate(int regularCustRate) {
-		this.regularCustRate = regularCustRate;
-	}
-	public int getRegularCustRate() {
-		return regularCustRate;
 	}
 	public void setRegCustWeekDayRate(int regCustWeekDayRate) {
 		this.regCustWeekDayRate = regCustWeekDayRate;;

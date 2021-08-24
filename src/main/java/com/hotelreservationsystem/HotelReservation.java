@@ -1,13 +1,15 @@
 package com.hotelreservationsystem;
 
+import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 
 public class HotelReservation {
-	
+
 	ArrayList<Hotel> hotelList = new ArrayList<>();
 	
 	public void addHotel() {
@@ -16,10 +18,6 @@ public class HotelReservation {
 		System.out.print("Enter the name of Hotel : ");
 		String name = sc.nextLine();
 		Hotel hotel = new Hotel(name);
-		System.out.print("Enter regular customer rate : ");
-		int regularCustRate = sc.nextInt();
-		hotel.setRegularCustRate(regularCustRate);
-		hotelList.add(hotel);
 		System.out.print("Enter regular customer weekday rate : ");
 		int regCustWeekDayRate = sc.nextInt();
 		hotel.setRegCustWeekDayRate(regCustWeekDayRate);
@@ -29,7 +27,19 @@ public class HotelReservation {
 		hotel.setRegCustWeekEndRate(regCustWeekEndRate);
 		hotelList.add(hotel);
 	}
-	
+	//get list of date between startdates to enddate
+	public ArrayList<LocalDate> getDates(LocalDate startDate, LocalDate endDate) {
+		
+		ArrayList<LocalDate> dateList = new ArrayList<>();
+		
+		//find number of days
+	    final long noOfDays = ChronoUnit.DAYS.between(startDate, endDate);
+//	    return IntStream.iterate(0, i -> i + 1).limit(noOfDays).mapToObj(i -> startDate.plusDays(i)).collect(Collectors.toList());
+	    for(int i = 0; i <= noOfDays; i++){
+	    	dateList.add(startDate.plusDays(i));
+	    }
+	    return dateList;
+	}
 	public void findcheapestHotel() {
 		
 		Scanner sc = new Scanner(System.in);
@@ -43,22 +53,34 @@ public class HotelReservation {
     	//convert given format date into local date
     	LocalDate startDate = LocalDate.parse(date1, formatter);
         LocalDate endDate = LocalDate.parse(date2, formatter);
-        //find number of days
-	    final long days = ChronoUnit.DAYS.between(startDate, endDate);
-	    
-	    String hotelName = " ";
+        //
+        ArrayList<LocalDate> dateList = getDates(startDate,endDate);
+        
+	    Hotel tempHotel = null;
 	    int min = 0; 
 	    for(Hotel hotel : hotelList) {
+	    	int totalRate = 0;
 	    	
-	    	int totalRate = (int)days * hotel.getRegularCustRate();
+	    	for(LocalDate date : dateList) {
+	    		//get day 
+		    	DayOfWeek day = date.getDayOfWeek();
+		    	if(day.compareTo(DayOfWeek.SATURDAY) == 0 || day.compareTo(DayOfWeek.SUNDAY) == 0) {
+		    
+			    	totalRate +=  hotel.getRegCustWeekEndRate();
+		    	}
+		    	else {
+		    		totalRate +=  hotel.getRegCustWeekDayRate();
+		    	}
+	    	}
 	    	if(min == 0 || totalRate < min) {
 	    		
 	    		min = totalRate;
-	    		hotelName = hotel.getName();
+	    		tempHotel = hotel;
 	    	}
 	    }
-	    System.out.print(hotelName + " , Total Rate : " + min);
+	    System.out.print(tempHotel.getName() + " , Total Rate : " + min);
 	}
+
     public static void main( String[] args ){
     	
 		HotelReservation reservation = new HotelReservation();
