@@ -56,7 +56,7 @@ public class HotelReservation {
     	//convert given format date into local date
     	LocalDate startDate = LocalDate.parse(date1, formatter);
         LocalDate endDate = LocalDate.parse(date2, formatter);
-        //
+       
         ArrayList<LocalDate> dateList = getDates(startDate,endDate);
         
 	    Hotel tempHotel = null;
@@ -81,7 +81,7 @@ public class HotelReservation {
 	    		tempHotel = hotel;
 	    	}
 	    }
-	    System.out.print(tempHotel.getName() + " , Total Rate : " + min);
+	    System.out.print(tempHotel.getName() + " , Rating : " + tempHotel.getRating() + " , Total Rate : " + min);
 	}
 
     public static void main( String[] args ){
