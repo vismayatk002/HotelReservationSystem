@@ -1,5 +1,9 @@
 package com.hotelreservationsystem;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.util.ArrayList;
+
 public class Hotel {
 
 	String name;
@@ -34,5 +38,23 @@ public class Hotel {
 	}
 	public int getRegCustWeekEndRate() {
 		return regCustWeekEndRate;
+	}
+	
+	public int getTotalRate(ArrayList<LocalDate> dateList) {
+		
+		int totalRate = 0;
+    	
+    	for(LocalDate date : dateList) {
+    		//get day 
+	    	DayOfWeek day = date.getDayOfWeek();
+	    	if(day.compareTo(DayOfWeek.SATURDAY) == 0 || day.compareTo(DayOfWeek.SUNDAY) == 0) {
+	    
+		    	totalRate +=  getRegCustWeekEndRate();
+	    	}
+	    	else {
+	    		totalRate +=  getRegCustWeekDayRate();
+	    	}
+    	}
+    	return totalRate;
 	}
 }

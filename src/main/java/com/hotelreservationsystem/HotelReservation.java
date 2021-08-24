@@ -6,10 +6,12 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.Comparator;
 
 public class HotelReservation {
 
 	ArrayList<Hotel> hotelList = new ArrayList<>();
+	LocalDate startDate, endDate;
 	
 	public void addHotel() {
 		
@@ -31,7 +33,7 @@ public class HotelReservation {
 		hotelList.add(hotel);
 	}
 	//get list of date between start-dates to end-date
-	public ArrayList<LocalDate> getDates(LocalDate startDate, LocalDate endDate) {
+	public ArrayList<LocalDate> getDates() {
 		
 		ArrayList<LocalDate> dateList = new ArrayList<>();
 		
@@ -43,7 +45,8 @@ public class HotelReservation {
 	    }
 	    return dateList;
 	}
-	public void findcheapestHotel() {
+	
+	public void readDate() {
 		
 		Scanner sc = new Scanner(System.in);
 		
@@ -54,27 +57,35 @@ public class HotelReservation {
     	//define date format
     	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMMyyyy"); 
     	//convert given format date into local date
-    	LocalDate startDate = LocalDate.parse(date1, formatter);
-        LocalDate endDate = LocalDate.parse(date2, formatter);
-       
-        ArrayList<LocalDate> dateList = getDates(startDate,endDate);
-        
-	    Hotel tempHotel = null;
+    	startDate = LocalDate.parse(date1, formatter);
+        endDate = LocalDate.parse(date2, formatter);
+	}
+	
+	public void findHighestRatedHotel() {
+		
+		readDate();
+		ArrayList<LocalDate> dateList = getDates();
+		
+		Comparator<Hotel> comparator = Comparator.comparing( Hotel::getRating);
+				
+		Hotel maxRatedHotel = hotelList
+						.stream()
+						.max(comparator).get();
+		
+		System.out.print(maxRatedHotel.getName() + " , Rating : " + maxRatedHotel.getRating() + " , Total Rate : " + maxRatedHotel.getTotalRate(dateList));
+		
+		}
+	
+	public void findcheapestHotel() {
+		
+		readDate();
+		ArrayList<LocalDate> dateList = getDates();
+		Hotel tempHotel = null;
 	    int min = 0; 
 	    for(Hotel hotel : hotelList) {
-	    	int totalRate = 0;
+	    	//get total rate for each hotel
+	    	int totalRate = hotel.getTotalRate(dateList);
 	    	
-	    	for(LocalDate date : dateList) {
-	    		//get day 
-		    	DayOfWeek day = date.getDayOfWeek();
-		    	if(day.compareTo(DayOfWeek.SATURDAY) == 0 || day.compareTo(DayOfWeek.SUNDAY) == 0) {
-		    
-			    	totalRate +=  hotel.getRegCustWeekEndRate();
-		    	}
-		    	else {
-		    		totalRate +=  hotel.getRegCustWeekDayRate();
-		    	}
-	    	}
 	    	if(min == 0 || totalRate < min) {
 	    		
 	    		min = totalRate;
@@ -93,7 +104,7 @@ public class HotelReservation {
 			System.out.print("\n-------------");
 			System.out.print("\n### Menu ###");
 			System.out.print("\n-------------");
-			System.out.print("\n\n1 : Add Hotel details \n2 : Search cheapest Hotel");
+			System.out.print("\n\n1 : Add Hotel details \n2 : Search cheapest Hotel \n3 : Search highest rated Hotel");
 			System.out.print("\nChoose your option : ");
 			int option = sc.nextInt();
 			switch(option) {
@@ -102,6 +113,9 @@ public class HotelReservation {
 				break;
 				case 2 : 
 					reservation.findcheapestHotel();
+				break;
+				case 3 : 
+					reservation.findHighestRatedHotel();
 				break;
 				default :
 					System.out.print("\nInvalid option");
