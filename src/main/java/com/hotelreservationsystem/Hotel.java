@@ -54,21 +54,41 @@ public class Hotel {
 		return rewCustWeekEndRate;
 	}
 	
-	public int getTotalRate(ArrayList<LocalDate> dateList) {
+	public int getCustWeekDayRate(String customerType) {
+		
+		if(customerType.compareTo("Regular") == 0) {
+			return getRegCustWeekDayRate();
+		}
+		else {
+			return getRewCustWeekDayRate();
+		}
+	}
+	
+	public int getCustWeekEndRate(String customerType) {
+		
+		if(customerType.compareTo("Regular") == 0) {
+			return getRegCustWeekEndRate();
+		}
+		else {
+			return getRewCustWeekEndRate();
+		}
+	}
+
+	public int getTotalRate(ArrayList<LocalDate> dateList, String customerType) {
 		
 		int totalRate = 0;
     	
     	for(LocalDate date : dateList) {
     		//get day 
-	    	DayOfWeek day = date.getDayOfWeek();
-	    	if(day.compareTo(DayOfWeek.SATURDAY) == 0 || day.compareTo(DayOfWeek.SUNDAY) == 0) {
-	    
-		    	totalRate +=  getRegCustWeekEndRate();
-	    	}
-	    	else {
-	    		totalRate +=  getRegCustWeekDayRate();
-	    	}
+		    DayOfWeek day = date.getDayOfWeek();
+		    if(day.compareTo(DayOfWeek.SATURDAY) == 0 || day.compareTo(DayOfWeek.SUNDAY) == 0) {
+		    
+			    totalRate +=  getCustWeekEndRate(customerType);
+		    }
+		    else {
+		    	totalRate +=  getCustWeekDayRate(customerType);
+		    }
     	}
     	return totalRate;
-	}
+	}	
 }

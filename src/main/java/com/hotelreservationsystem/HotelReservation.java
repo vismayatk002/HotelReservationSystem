@@ -5,12 +5,18 @@ import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.Scanner;
+import java.util.stream.Collectors;
 import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
 
 public class HotelReservation {
 
 	ArrayList<Hotel> hotelList = new ArrayList<>();
 	LocalDate startDate, endDate;
+	String customerType;
 	
 	public void addHotel() {
 		
@@ -52,7 +58,7 @@ public class HotelReservation {
 	    return dateList;
 	}
 	
-	public void readDate() {
+	public void readDate() throws CustomerTypeException{
 		
 		Scanner sc = new Scanner(System.in);
 		
@@ -60,6 +66,14 @@ public class HotelReservation {
     	String date1 = sc.nextLine();
     	System.out.print("Enter end date : ");
     	String date2 = sc.nextLine();
+    	System.out.print("Enter Customer type (Regular/ Reward) : ");
+    	customerType = sc.nextLine();
+    	
+    	if((customerType.compareTo("Regular") != 0) && (customerType.compareTo("Reward") != 0)) {
+    		
+    		throw new CustomerTypeException("Invalid Customer type");
+    	}
+    	
     	//define date format
     	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("ddMMMyyyy"); 
     	//convert given format date into local date
@@ -69,38 +83,88 @@ public class HotelReservation {
 	
 	public void findHighestRatedHotel() {
 		
-		readDate();
-		ArrayList<LocalDate> dateList = getDates();
+		try {
+    
+			readDate();
+			ArrayList<LocalDate> dateList = getDates();
+			
+			Comparator<Hotel> comparator = Comparator.comparing( Hotel::getRating);
+					
+			Hotel maxRatedHotel = hotelList
+							.stream()
+							.max(comparator).get();
+			
+			System.out.print(maxRatedHotel.getName() + " , Rating : " + maxRatedHotel.getRating() + " , Total Rate : " + maxRatedHotel.getTotalRate(dateList, customerType));
 		
-		Comparator<Hotel> comparator = Comparator.comparing( Hotel::getRating);
-				
-		Hotel maxRatedHotel = hotelList
-						.stream()
-						.max(comparator).get();
-		
-		System.out.print(maxRatedHotel.getName() + " , Rating : " + maxRatedHotel.getRating() + " , Total Rate : " + maxRatedHotel.getTotalRate(dateList));
-		
-		}
+		}catch(CustomerTypeException e) {
+    		
+			System.out.println(e.getMessage());
+    	}	
+	}
 	
 	public void findcheapestHotel() {
 		
-		readDate();
-		ArrayList<LocalDate> dateList = getDates();
-		Hotel tempHotel = null;
-	    int min = 0; 
-	    for(Hotel hotel : hotelList) {
-	    	//get total rate for each hotel
-	    	int totalRate = hotel.getTotalRate(dateList);
-	    	
-	    	if(min == 0 || totalRate < min) {
-	    		
-	    		min = totalRate;
-	    		tempHotel = hotel;
-	    	}
-	    }
-	    System.out.print(tempHotel.getName() + " , Rating : " + tempHotel.getRating() + " , Total Rate : " + min);
+		try {
+			
+			readDate();
+			ArrayList<LocalDate> dateList = getDates();
+			Hotel tempHotel = null;
+		    int min = 0; 
+		    for(Hotel hotel : hotelList) {
+		    	//get total rate for each hotel
+		    	int totalRate = hotel.getTotalRate(dateList, customerType);
+		    	
+		    	if(min == 0 || totalRate < min) {
+		    		
+		    		min = totalRate;
+		    		tempHotel = hotel;
+		    	}
+		    }
+		    System.out.print(tempHotel.getName() + " , Rating : " + tempHotel.getRating() + " , Total Rate : " + min);
+		
+		}catch(CustomerTypeException e) {
+    		
+			System.out.println(e.getMessage());
+    	}
 	}
-
+	
+	public void  FindCheapestBestRatedHotel() {
+		
+		try {
+		    
+			readDate();
+			Map<Hotel,Integer> totalRateMap = new HashMap<>();
+			ArrayList<LocalDate> dateList = getDates();
+			int minRate = 0; 
+			for(Hotel hotel : hotelList) {
+		    	//get total rate for each hotel
+		    	int totalRate = hotel.getTotalRate(dateList, customerType);
+		    	totalRateMap.put(hotel, totalRate);
+		    	
+		    	if(minRate == 0 || totalRate < minRate) {
+		    		minRate = totalRate;
+		    	}
+			}
+			Hotel finalResult = null;
+			int rating = 0;
+			Iterator <Hotel> it = totalRateMap.keySet().iterator();      
+			while(it.hasNext())  
+			{  
+				Hotel key= it.next(); 
+				if(totalRateMap.get(key) == minRate) {
+					if(key.getRating() > rating) {
+						rating = key.getRating();
+						finalResult = key;
+					}
+				}
+			}
+			 System.out.print(finalResult.getName() + " , Rating : " + finalResult.getRating() + " , Total Rate : " + minRate);
+		}catch(CustomerTypeException e) {
+    		
+			System.out.println(e.getMessage());
+    	}
+	}
+	
     public static void main( String[] args ){
     	
 		HotelReservation reservation = new HotelReservation();
@@ -110,7 +174,7 @@ public class HotelReservation {
 			System.out.print("\n-------------");
 			System.out.print("\n### Menu ###");
 			System.out.print("\n-------------");
-			System.out.print("\n\n1 : Add Hotel details \n2 : Search cheapest Hotel \n3 : Search highest rated Hotel");
+			System.out.print("\n\n1 : Add Hotel details \n2 : Search cheapest Hotel \n3 : Search highest rated Hotel \n4 : Cheapest Best Rated Hotel");
 			System.out.print("\nChoose your option : ");
 			int option = sc.nextInt();
 			switch(option) {
@@ -123,6 +187,9 @@ public class HotelReservation {
 				case 3 : 
 					reservation.findHighestRatedHotel();
 				break;
+				case 4 : 
+					reservation.FindCheapestBestRatedHotel();
+					break;
 				default :
 					System.out.print("\nInvalid option");
 			}
