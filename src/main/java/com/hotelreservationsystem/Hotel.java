@@ -10,6 +10,8 @@ public class Hotel {
 	int regCustWeekDayRate;
 	int regCustWeekEndRate;
 	int rating;
+	int rewCustWeekDayRate;
+	int rewCustWeekEndRate;
 	
 	public Hotel(String name){
 		this.name = name;
@@ -38,6 +40,18 @@ public class Hotel {
 	}
 	public int getRegCustWeekEndRate() {
 		return regCustWeekEndRate;
+	}
+	public void setRewCustWeekDayRate(int rewCustWeekDayRate) {
+		this.rewCustWeekDayRate = rewCustWeekDayRate;;
+	}
+	public int getRewCustWeekDayRate() {
+		return rewCustWeekDayRate;
+	}
+	public void setRewCustWeekEndRate(int rewCustWeekEndRate) {
+		this.rewCustWeekEndRate = rewCustWeekEndRate;
+	}
+	public int getRewCustWeekEndRate() {
+		return rewCustWeekEndRate;
 	}
 	
 	public int getTotalRate(ArrayList<LocalDate> dateList) {

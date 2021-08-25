@@ -1,6 +1,5 @@
 package com.hotelreservationsystem;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -31,6 +30,14 @@ public class HotelReservation {
 		int regCustWeekEndRate = sc.nextInt();
 		hotel.setRegCustWeekEndRate(regCustWeekEndRate);
 		hotelList.add(hotel);
+		System.out.print("Enter reward customer weekday rate : ");
+		int rewCustWeekDayRate = sc.nextInt();
+		hotel.setRewCustWeekDayRate(rewCustWeekDayRate);
+		hotelList.add(hotel);
+		System.out.print("Enter reward customer weekend rate : ");
+		int rewCustWeekEndRate = sc.nextInt();
+		hotel.setRewCustWeekEndRate(rewCustWeekEndRate);
+		hotelList.add(hotel);
 	}
 	//get list of date between start-dates to end-date
 	public ArrayList<LocalDate> getDates() {
@@ -39,7 +46,6 @@ public class HotelReservation {
 		
 		//find number of days
 	    final long noOfDays = ChronoUnit.DAYS.between(startDate, endDate);
-//	    return IntStream.iterate(0, i -> i + 1).limit(noOfDays).mapToObj(i -> startDate.plusDays(i)).collect(Collectors.toList());
 	    for(int i = 0; i <= noOfDays; i++){
 	    	dateList.add(startDate.plusDays(i));
 	    }
